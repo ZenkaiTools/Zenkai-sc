@@ -5,9 +5,8 @@
 --    ██╔██╗ ██╔══╝  ██║╚██╗██║██╔═██╗ ██╔══██║██║
 --   ██╔╝ ██╗███████╗██║ ╚████║██║  ██╗██║  ██║██║
 --   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝
---   ZENKAI SC · VIOLENCE DISTRICT EDITION
+--   ZENKAI SC v4.0 · VIOLENCE DISTRICT
 --   Credit  : ANDIKA
---   Version : 1.0
 --   Type    : LocalScript (Delta / Mobile / PC)
 -- ═══════════════════════════════════════════════════════════════
 
@@ -21,53 +20,85 @@ local TweenService     = game:GetService("TweenService")
 local VirtualUser      = game:GetService("VirtualUser")
 local StarterGui       = game:GetService("StarterGui")
 
-local LP     = Players.LocalPlayer
+local LP = Players.LocalPlayer
 local Camera = Workspace.CurrentCamera
 
 -- ═══════════════════════════════════════════════════════════════
 -- CONFIG
 -- ═══════════════════════════════════════════════════════════════
 local CFG = {
-	Fullbright   = false,
-	NoShadow     = false,
-	LowGraphics  = false,
-	NoEffects    = false,
-	CleanSky     = false,
-	ClockTime    = 14,
-	Brightness   = 2,
-	Zoom         = 1000,
-	
+	-- AIM
 	SilentAim    = false,
 	TargetMode   = "Survivor",
 	TargetPart   = "Head",
+	FOV          = 120,
+	FOVCircle    = true,
+	AutoShoot    = false,
+	WallCheck    = false,
 	AutoFace     = true,
 	AutoActivate = true,
-	RemoteSpam   = true,
-	HideAnim     = true,
-	WallCheck    = true,
-	AimPredict   = true,
-	MaxDist      = 30,
 	FireDelay    = 0.15,
+	MaxDistance  = 50,
 	PredictSpeed = 400,
-	VerticalDot  = 30,
 	
-	VeilMode     = "Auto",
+	-- KILL
+	TPKill       = false,
+	TPRange      = 60,
+	TPDelay      = 0.4,
 	AutoSwitch   = true,
-	ChargeTime   = 2,
-	AutoChase    = false,
-	AutoPallet   = false,
-	AutoVault    = false,
+	InstantHook  = false,
+	AutoHook     = false,
+	OneShot      = false,
+	MultiHit     = false,
+	MultiHitRate = 3,
+	SlowAll      = false,
+	FreezeAll    = false,
+	KillAll      = false,
+	KillAllRange = 25,
+	HitboxExpand = false,
+	HitboxSize   = 3,
 	
-	AutoDagger   = false,
-	ParryDist    = 8,
-	ParryDelay   = 0.05,
-	OnlyFacing   = true,
+	-- BYPASS UNHOOK
+	AutoUnhook   = false,
+	UnhookRange  = 30,
+	SinkUnder    = false,
+	SinkDepth    = 8,
+	InvisibleAfterUnhook = false,
+	AutoHide     = false,
+	FakeDC       = false,
+	SpeedBurst   = false,
+	
+	-- SURVIVOR
+	InstantHeal  = false,
+	InstantGen   = false,
+	GodPallet    = false,
+	NoFallDamage = false,
+	FastVault    = false,
+	TPExit       = false,
 	AutoSkill    = false,
 	SkillMode    = "Auto",
 	AutoPalletDrop = false,
 	AutoFlee     = false,
-	AntiFall     = false,
 	
+	-- AUTO DAGGER
+	AutoDagger   = false,
+	ParryDist    = 8,
+	ParryDelay   = 0.05,
+	
+	-- MOVE
+	SpeedHack    = false,
+	SpeedVal     = 50,
+	JumpPower    = false,
+	JumpVal      = 100,
+	InfJump      = false,
+	Fly          = false,
+	FlySpeed     = 80,
+	Noclip       = false,
+	GodMode      = false,
+	AntiStun     = false,
+	AntiKnock    = false,
+	
+	-- ESP
 	ESP          = false,
 	Chams        = true,
 	ESPBox       = true,
@@ -76,55 +107,55 @@ local CFG = {
 	ESPHealth    = true,
 	ESPGen       = false,
 	ESPPallet    = false,
+	ESPHook      = false,
 	ESPMaxDist   = 500,
 	TeamCheck    = true,
 	
-	SpeedHack    = false,
-	SpeedValue   = 50,
-	JumpPower    = false,
-	JumpValue    = 100,
-	InfJump      = false,
-	Fly          = false,
-	FlySpeed     = 50,
-	Noclip       = false,
-	GodMode      = false,
+	-- VISUAL
+	Fullbright   = false,
+	NoShadow     = false,
+	CleanSky     = false,
+	NoEffects    = false,
+	ClockTime    = 14,
+	Brightness   = 2,
+	MaxZoom      = 1000,
 	
-	KillAura     = false,
-	AutoFarm     = false,
-	AntiAFK      = true,
-	FPSBoost     = false,
+	-- ANTI
+	AntiReport   = false,
+	AntiKick     = false,
+	SpoofName    = false,
+	RandomDelay  = true,
+	AutoDisable  = true,
 }
 
 -- ═══════════════════════════════════════════════════════════════
 -- UI ROOT
 -- ═══════════════════════════════════════════════════════════════
 local GUI = Instance.new("ScreenGui")
-GUI.Name = "ZenkaiSc_Andika"
+GUI.Name = "ZenkaiSc_v4"
 GUI.ResetOnSpawn = false
 GUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 GUI.IgnoreGuiInset = true
 GUI.Parent = CoreGui
 
--- Toggle Button
-local ToggleBtn = Instance.new("TextButton")
-ToggleBtn.Size = UDim2.new(0, 50, 0, 50)
-ToggleBtn.Position = UDim2.new(0, 15, 0, 100)
-ToggleBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 180)
-ToggleBtn.Text = "Z"
-ToggleBtn.TextColor3 = Color3.fromRGB(0, 255, 255)
-ToggleBtn.Font = Enum.Font.GothamBlack
-ToggleBtn.TextSize = 22
-ToggleBtn.Active = true
-ToggleBtn.Draggable = true
-ToggleBtn.Parent = GUI
-Instance.new("UICorner", ToggleBtn).CornerRadius = UDim.new(1, 0)
-local TB1 = Instance.new("UIStroke", ToggleBtn)
-TB1.Color = Color3.fromRGB(0, 255, 255); TB1.Thickness = 2
+local Toggle = Instance.new("TextButton")
+Toggle.Size = UDim2.new(0, 55, 0, 55)
+Toggle.Position = UDim2.new(0, 15, 0, 100)
+Toggle.BackgroundColor3 = Color3.fromRGB(0, 120, 180)
+Toggle.Text = "Z"
+Toggle.TextColor3 = Color3.fromRGB(0, 255, 255)
+Toggle.Font = Enum.Font.GothamBlack
+Toggle.TextSize = 24
+Toggle.Active = true
+Toggle.Draggable = true
+Toggle.Parent = GUI
+Instance.new("UICorner", Toggle).CornerRadius = UDim.new(1, 0)
+local TS = Instance.new("UIStroke", Toggle)
+TS.Color = Color3.fromRGB(0, 255, 255); TS.Thickness = 2
 
--- Main Frame
 local Main = Instance.new("Frame")
-Main.Size = UDim2.new(0, 300, 0, 400)
-Main.Position = UDim2.new(0, 15, 0, 160)
+Main.Size = UDim2.new(0, 320, 0, 440)
+Main.Position = UDim2.new(0.5, -160, 0.5, -220)
 Main.BackgroundColor3 = Color3.fromRGB(10, 16, 24)
 Main.BorderSizePixel = 0
 Main.Visible = false
@@ -132,64 +163,78 @@ Main.Active = true
 Main.Draggable = true
 Main.Parent = GUI
 Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 12)
-local MB1 = Instance.new("UIStroke", Main)
-MB1.Color = Color3.fromRGB(0, 180, 255); MB1.Thickness = 1.5
+local MS = Instance.new("UIStroke", Main)
+MS.Color = Color3.fromRGB(0, 180, 255); MS.Thickness = 1.5
 
--- Title Bar
-local Title = Instance.new("TextLabel")
-Title.Size = UDim2.new(1, -40, 0, 32)
-Title.Position = UDim2.new(0, 0, 0, 0)
+local Title = Instance.new("Frame")
+Title.Size = UDim2.new(1, 0, 0, 34)
 Title.BackgroundColor3 = Color3.fromRGB(0, 90, 140)
-Title.Text = "  ZENKAI SC  ·  by ANDIKA"
-Title.TextColor3 = Color3.fromRGB(0, 255, 255)
-Title.Font = Enum.Font.GothamBold
-Title.TextSize = 11
-Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.BorderSizePixel = 0
 Title.Parent = Main
 Instance.new("UICorner", Title).CornerRadius = UDim.new(0, 12)
 
--- Close Button
+local TitleText = Instance.new("TextLabel")
+TitleText.Size = UDim2.new(1, -40, 1, 0)
+TitleText.Position = UDim2.new(0, 12, 0, 0)
+TitleText.BackgroundTransparency = 1
+TitleText.Text = "ZENKAI SC v4.0 · by ANDIKA"
+TitleText.TextColor3 = Color3.fromRGB(0, 255, 255)
+TitleText.Font = Enum.Font.GothamBold
+TitleText.TextSize = 11
+TitleText.TextXAlignment = Enum.TextXAlignment.Left
+TitleText.Parent = Title
+
 local CloseBtn = Instance.new("TextButton")
-CloseBtn.Size = UDim2.new(0, 30, 0, 26)
-CloseBtn.Position = UDim2.new(1, -34, 0, 3)
+CloseBtn.Size = UDim2.new(0, 28, 0, 26)
+CloseBtn.Position = UDim2.new(1, -32, 0, 4)
 CloseBtn.BackgroundColor3 = Color3.fromRGB(220, 40, 40)
 CloseBtn.Text = "×"
 CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.TextSize = 16
-CloseBtn.Parent = Main
+CloseBtn.Parent = Title
 Instance.new("UICorner", CloseBtn).CornerRadius = UDim.new(0, 6)
 
--- Tab Bar
+local InfoPanel = Instance.new("TextLabel")
+InfoPanel.Size = UDim2.new(1, -12, 0, 22)
+InfoPanel.Position = UDim2.new(0, 6, 0, 38)
+InfoPanel.BackgroundColor3 = Color3.fromRGB(15, 25, 38)
+InfoPanel.Text = "  Target: -  |  Dist: -  |  Speed: -"
+InfoPanel.TextColor3 = Color3.fromRGB(0, 255, 255)
+InfoPanel.Font = Enum.Font.GothamBold
+InfoPanel.TextSize = 10
+InfoPanel.TextXAlignment = Enum.TextXAlignment.Left
+InfoPanel.Parent = Main
+Instance.new("UICorner", InfoPanel).CornerRadius = UDim.new(0, 5)
+
 local TabBar = Instance.new("Frame")
 TabBar.Size = UDim2.new(1, -12, 0, 28)
-TabBar.Position = UDim2.new(0, 6, 0, 36)
+TabBar.Position = UDim2.new(0, 6, 0, 64)
 TabBar.BackgroundTransparency = 1
 TabBar.Parent = Main
 local TBL = Instance.new("UIListLayout", TabBar)
 TBL.FillDirection = Enum.FillDirection.Horizontal
-TBL.Padding = UDim.new(0, 4)
+TBL.Padding = UDim.new(0, 3)
 
--- Content
 local Content = Instance.new("ScrollingFrame")
-Content.Size = UDim2.new(1, -12, 1, -72)
-Content.Position = UDim2.new(0, 6, 0, 68)
+Content.Size = UDim2.new(1, -12, 1, -100)
+Content.Position = UDim2.new(0, 6, 0, 96)
 Content.BackgroundTransparency = 1
 Content.BorderSizePixel = 0
 Content.ScrollBarThickness = 3
 Content.ScrollBarImageColor3 = Color3.fromRGB(0, 180, 255)
-Content.CanvasSize = UDim2.new(0, 0, 0, 800)
+Content.CanvasSize = UDim2.new(0, 0, 0, 0)
+Content.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Content.Parent = Main
-local CL = Instance.new("UIListLayout", Content)
-CL.Padding = UDim.new(0, 5)
-CL.SortOrder = Enum.SortOrder.LayoutOrder
+local CLay = Instance.new("UIListLayout", Content)
+CLay.Padding = UDim.new(0, 5)
+CLay.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Watermark
 local WM = Instance.new("TextLabel")
-WM.Size = UDim2.new(1, -20, 0, 18)
-WM.Position = UDim2.new(0, 10, 1, -22)
+WM.Size = UDim2.new(1, -12, 0, 18)
+WM.Position = UDim2.new(0, 6, 1, -22)
 WM.BackgroundColor3 = Color3.fromRGB(0, 70, 110)
-WM.Text = "  ⚡ Zenkai Sc v1.0 · ANDIKA"
+WM.Text = "  ⚡ Zenkai Sc v4.0 · ANDIKA"
 WM.TextColor3 = Color3.fromRGB(0, 255, 255)
 WM.Font = Enum.Font.GothamBold
 WM.TextSize = 10
@@ -200,6 +245,12 @@ Instance.new("UICorner", WM).CornerRadius = UDim.new(0, 5)
 -- ═══════════════════════════════════════════════════════════════
 -- COMPONENTS
 -- ═══════════════════════════════════════════════════════════════
+local function clearContent()
+	for _, c in ipairs(Content:GetChildren()) do
+		if not c:IsA("UIListLayout") then c:Destroy() end
+	end
+end
+
 local function section(txt)
 	local s = Instance.new("TextLabel")
 	s.Size = UDim2.new(1, -6, 0, 20)
@@ -215,14 +266,13 @@ end
 
 local function toggle(name, def, cb)
 	local f = Instance.new("Frame")
-	f.Size = UDim2.new(1, -6, 0, 26)
+	f.Size = UDim2.new(1, -6, 0, 30)
 	f.BackgroundColor3 = Color3.fromRGB(18, 26, 38)
 	f.BorderSizePixel = 0
 	f.Parent = Content
 	Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
-	
 	local l = Instance.new("TextLabel")
-	l.Size = UDim2.new(1, -55, 1, 0)
+	l.Size = UDim2.new(1, -60, 1, 0)
 	l.Position = UDim2.new(0, 10, 0, 0)
 	l.BackgroundTransparency = 1
 	l.Text = name
@@ -231,29 +281,26 @@ local function toggle(name, def, cb)
 	l.TextSize = 11
 	l.TextXAlignment = Enum.TextXAlignment.Left
 	l.Parent = f
-	
 	local b = Instance.new("TextButton")
-	b.Size = UDim2.new(0, 34, 0, 18)
-	b.Position = UDim2.new(1, -42, 0.5, -9)
+	b.Size = UDim2.new(0, 44, 0, 26)
+	b.Position = UDim2.new(1, -52, 0.5, -13)
 	b.BackgroundColor3 = def and Color3.fromRGB(0, 180, 255) or Color3.fromRGB(40, 55, 75)
 	b.Text = ""
 	b.Parent = f
 	Instance.new("UICorner", b).CornerRadius = UDim.new(1, 0)
-	
 	local c = Instance.new("Frame")
-	c.Size = UDim2.new(0, 14, 0, 14)
-	c.Position = def and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)
+	c.Size = UDim2.new(0, 18, 0, 18)
+	c.Position = def and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 4, 0.5, -9)
 	c.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	c.BorderSizePixel = 0
 	c.Parent = b
 	Instance.new("UICorner", c).CornerRadius = UDim.new(1, 0)
-	
 	local st = def
 	b.MouseButton1Click:Connect(function()
 		st = not st
 		b.BackgroundColor3 = st and Color3.fromRGB(0, 180, 255) or Color3.fromRGB(40, 55, 75)
 		TweenService:Create(c, TweenInfo.new(0.12), {
-			Position = st and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)
+			Position = st and UDim2.new(1, -22, 0.5, -9) or UDim2.new(0, 4, 0.5, -9)
 		}):Play()
 		if cb then cb(st) end
 	end)
@@ -261,12 +308,11 @@ end
 
 local function dropdown(name, opts, def, cb)
 	local f = Instance.new("Frame")
-	f.Size = UDim2.new(1, -6, 0, 26)
+	f.Size = UDim2.new(1, -6, 0, 30)
 	f.BackgroundColor3 = Color3.fromRGB(18, 26, 38)
 	f.BorderSizePixel = 0
 	f.Parent = Content
 	Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
-	
 	local l = Instance.new("TextLabel")
 	l.Size = UDim2.new(0, 100, 1, 0)
 	l.Position = UDim2.new(0, 10, 0, 0)
@@ -277,10 +323,9 @@ local function dropdown(name, opts, def, cb)
 	l.TextSize = 11
 	l.TextXAlignment = Enum.TextXAlignment.Left
 	l.Parent = f
-	
 	local b = Instance.new("TextButton")
-	b.Size = UDim2.new(0, 100, 0, 20)
-	b.Position = UDim2.new(1, -108, 0.5, -10)
+	b.Size = UDim2.new(0, 110, 0, 22)
+	b.Position = UDim2.new(1, -118, 0.5, -11)
 	b.BackgroundColor3 = Color3.fromRGB(30, 45, 65)
 	b.Text = def
 	b.TextColor3 = Color3.fromRGB(0, 255, 255)
@@ -288,7 +333,6 @@ local function dropdown(name, opts, def, cb)
 	b.TextSize = 10
 	b.Parent = f
 	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 4)
-	
 	local i = 1
 	for k, v in ipairs(opts) do if v == def then i = k break end end
 	b.MouseButton1Click:Connect(function()
@@ -300,14 +344,13 @@ end
 
 local function slider(name, min, max, def, cb)
 	local f = Instance.new("Frame")
-	f.Size = UDim2.new(1, -6, 0, 42)
+	f.Size = UDim2.new(1, -6, 0, 46)
 	f.BackgroundColor3 = Color3.fromRGB(18, 26, 38)
 	f.BorderSizePixel = 0
 	f.Parent = Content
 	Instance.new("UICorner", f).CornerRadius = UDim.new(0, 6)
-	
 	local l = Instance.new("TextLabel")
-	l.Size = UDim2.new(1, -70, 0, 16)
+	l.Size = UDim2.new(1, -70, 0, 18)
 	l.Position = UDim2.new(0, 10, 0, 4)
 	l.BackgroundTransparency = 1
 	l.Text = name
@@ -316,9 +359,8 @@ local function slider(name, min, max, def, cb)
 	l.TextSize = 10
 	l.TextXAlignment = Enum.TextXAlignment.Left
 	l.Parent = f
-	
 	local v = Instance.new("TextLabel")
-	v.Size = UDim2.new(0, 60, 0, 16)
+	v.Size = UDim2.new(0, 60, 0, 18)
 	v.Position = UDim2.new(1, -70, 0, 4)
 	v.BackgroundTransparency = 1
 	v.Text = tostring(def)
@@ -327,36 +369,32 @@ local function slider(name, min, max, def, cb)
 	v.TextSize = 10
 	v.TextXAlignment = Enum.TextXAlignment.Right
 	v.Parent = f
-	
 	local bar = Instance.new("Frame")
-	bar.Size = UDim2.new(1, -20, 0, 6)
-	bar.Position = UDim2.new(0, 10, 0, 26)
+	bar.Size = UDim2.new(1, -20, 0, 10)
+	bar.Position = UDim2.new(0, 10, 0, 28)
 	bar.BackgroundColor3 = Color3.fromRGB(40, 55, 75)
 	bar.BorderSizePixel = 0
 	bar.Parent = f
 	Instance.new("UICorner", bar).CornerRadius = UDim.new(1, 0)
-	
 	local fill = Instance.new("Frame")
 	fill.Size = UDim2.new((def - min) / (max - min), 0, 1, 0)
 	fill.BackgroundColor3 = Color3.fromRGB(0, 180, 255)
 	fill.BorderSizePixel = 0
 	fill.Parent = bar
 	Instance.new("UICorner", fill).CornerRadius = UDim.new(1, 0)
-	
 	local dot = Instance.new("Frame")
-	dot.Size = UDim2.new(0, 12, 0, 12)
-	dot.Position = UDim2.new((def - min) / (max - min), -6, 0.5, -6)
+	dot.Size = UDim2.new(0, 16, 0, 16)
+	dot.Position = UDim2.new((def - min) / (max - min), -8, 0.5, -8)
 	dot.BackgroundColor3 = Color3.fromRGB(0, 220, 255)
 	dot.BorderSizePixel = 0
 	dot.Parent = bar
 	Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
-	
 	local drag = false
 	local function upd(inp)
 		local r = math.clamp((inp.Position.X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
 		local val = math.floor(min + (max - min) * r)
 		fill.Size = UDim2.new(r, 0, 1, 0)
-		dot.Position = UDim2.new(r, -6, 0.5, -6)
+		dot.Position = UDim2.new(r, -8, 0.5, -8)
 		v.Text = tostring(val)
 		if cb then cb(val) end
 	end
@@ -380,9 +418,12 @@ end
 -- ═══════════════════════════════════════════════════════════════
 -- TABS
 -- ═══════════════════════════════════════════════════════════════
-local function makeTab(name)
+local tabFuncs = {}
+
+local function makeTab(name, fn)
+	tabFuncs[name] = fn
 	local b = Instance.new("TextButton")
-	b.Size = UDim2.new(0, 55, 0, 24)
+	b.Size = UDim2.new(0, 58, 0, 24)
 	b.BackgroundColor3 = Color3.fromRGB(20, 30, 45)
 	b.Text = name
 	b.TextColor3 = Color3.fromRGB(120, 180, 220)
@@ -390,7 +431,6 @@ local function makeTab(name)
 	b.TextSize = 10
 	b.Parent = TabBar
 	Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
-	
 	b.MouseButton1Click:Connect(function()
 		for _, t in ipairs(TabBar:GetChildren()) do
 			if t:IsA("TextButton") then
@@ -398,42 +438,88 @@ local function makeTab(name)
 				t.TextColor3 = (t == b) and Color3.fromRGB(0, 255, 255) or Color3.fromRGB(120, 180, 220)
 			end
 		end
-		-- Clear content
-		for _, c in ipairs(Content:GetChildren()) do
-			if not c:IsA("UIListLayout") then c:Destroy() end
-		end
-		-- Build tab
-		if name == "Combat" then buildCombat()
-		elseif name == "ESP" then buildESP()
-		elseif name == "Veil" then buildVeil()
-		elseif name == "Survivor" then buildSurvivor()
-		elseif name == "Move" then buildMove()
-		elseif name == "Visual" then buildVisual()
-		elseif name == "Misc" then buildMisc() end
+		clearContent()
+		fn()
 	end)
 	return b
 end
 
--- Build Functions
-function buildCombat()
+-- ═══════════════════════════════════════════════════════════════
+-- TAB: AIM
+-- ═══════════════════════════════════════════════════════════════
+makeTab("Aim", function()
 	section("SILENT AIM")
 	toggle("Enable Silent Aim", CFG.SilentAim, function(v) CFG.SilentAim = v end)
-	dropdown("Target Mode", {"Survivor", "Killer", "Zombie"}, CFG.TargetMode, function(v) CFG.TargetMode = v end)
+	dropdown("Target Mode", {"Survivor", "Killer", "Zombie", "All"}, CFG.TargetMode, function(v) CFG.TargetMode = v end)
 	dropdown("Target Part", {"Head", "Torso", "Random"}, CFG.TargetPart, function(v) CFG.TargetPart = v end)
+	toggle("Auto Shoot", CFG.AutoShoot, function(v) CFG.AutoShoot = v end)
+	toggle("Wall Check", CFG.WallCheck, function(v) CFG.WallCheck = v end)
 	toggle("Auto Face", CFG.AutoFace, function(v) CFG.AutoFace = v end)
 	toggle("Auto Activate", CFG.AutoActivate, function(v) CFG.AutoActivate = v end)
-	toggle("Remote Spam", CFG.RemoteSpam, function(v) CFG.RemoteSpam = v end)
-	toggle("Hide Animation", CFG.HideAnim, function(v) CFG.HideAnim = v end)
-	toggle("Wall Check", CFG.WallCheck, function(v) CFG.WallCheck = v end)
-	toggle("Aim Prediction", CFG.AimPredict, function(v) CFG.AimPredict = v end)
-	section("RANGE")
-	slider("Max Distance", 5, 100, CFG.MaxDist, function(v) CFG.MaxDist = v end)
+	section("FOV")
+	toggle("Show FOV Circle", CFG.FOVCircle, function(v) CFG.FOVCircle = v end)
+	slider("FOV Radius", 30, 500, CFG.FOV, function(v) CFG.FOV = v end)
+	slider("Max Distance", 5, 200, CFG.MaxDistance, function(v) CFG.MaxDistance = v end)
 	slider("Fire Delay (ms)", 10, 500, CFG.FireDelay * 1000, function(v) CFG.FireDelay = v / 1000 end)
 	slider("Predict Speed", 100, 1500, CFG.PredictSpeed, function(v) CFG.PredictSpeed = v end)
-	slider("Vertical Dot", 0, 100, CFG.VerticalDot, function(v) CFG.VerticalDot = v end)
-end
+end)
 
-function buildESP()
+-- ═══════════════════════════════════════════════════════════════
+-- TAB: KILL
+-- ═══════════════════════════════════════════════════════════════
+makeTab("Kill", function()
+	section("TELEPORT KILL")
+	toggle("Enable TP Kill", CFG.TPKill, function(v) CFG.TPKill = v end)
+	toggle("Auto Switch Target", CFG.AutoSwitch, function(v) CFG.AutoSwitch = v end)
+	slider("TP Range", 10, 200, CFG.TPRange, function(v) CFG.TPRange = v end)
+	slider("TP Delay (ms)", 100, 2000, CFG.TPDelay * 1000, function(v) CFG.TPDelay = v / 1000 end)
+	section("BRUTAL KILLER")
+	toggle("Instant Hook", CFG.InstantHook, function(v) CFG.InstantHook = v end)
+	toggle("Auto Hook", CFG.AutoHook, function(v) CFG.AutoHook = v end)
+	toggle("One Shot (Mode Aman)", CFG.OneShot, function(v) CFG.OneShot = v end)
+	toggle("Multi Hit", CFG.MultiHit, function(v) CFG.MultiHit = v end)
+	slider("Multi Hit Rate", 1, 10, CFG.MultiHitRate, function(v) CFG.MultiHitRate = v end)
+	toggle("Slow All", CFG.SlowAll, function(v) CFG.SlowAll = v end)
+	toggle("Freeze All (3s)", CFG.FreezeAll, function(v) CFG.FreezeAll = v end)
+	toggle("Kill All (Radius)", CFG.KillAll, function(v) CFG.KillAll = v end)
+	slider("Kill All Range", 5, 100, CFG.KillAllRange, function(v) CFG.KillAllRange = v end)
+	toggle("Hitbox Expander", CFG.HitboxExpand, function(v) CFG.HitboxExpand = v end)
+	slider("Hitbox Size", 1, 10, CFG.HitboxSize, function(v) CFG.HitboxSize = v end)
+end)
+
+-- ═══════════════════════════════════════════════════════════════
+-- TAB: BYPASS
+-- ═══════════════════════════════════════════════════════════════
+makeTab("Bypass", function()
+	section("BYPASS UNHOOK")
+	toggle("Auto Unhook", CFG.AutoUnhook, function(v) CFG.AutoUnhook = v end)
+	slider("Unhook Range", 5, 100, CFG.UnhookRange, function(v) CFG.UnhookRange = v end)
+	toggle("Sink Underground", CFG.SinkUnder, function(v) CFG.SinkUnder = v end)
+	slider("Sink Depth", 2, 20, CFG.SinkDepth, function(v) CFG.SinkDepth = v end)
+	toggle("Invisible After Unhook", CFG.InvisibleAfterUnhook, function(v) CFG.InvisibleAfterUnhook = v end)
+	toggle("Auto Hide", CFG.AutoHide, function(v) CFG.AutoHide = v end)
+	toggle("Fake Disconnect", CFG.FakeDC, function(v) CFG.FakeDC = v end)
+	toggle("Speed Burst", CFG.SpeedBurst, function(v) CFG.SpeedBurst = v end)
+	section("AUTO DAGGER (SURVIVOR)")
+	toggle("Enable Auto Dagger", CFG.AutoDagger, function(v) CFG.AutoDagger = v end)
+	slider("Parry Distance", 3, 20, CFG.ParryDist, function(v) CFG.ParryDist = v end)
+	section("SURVIVOR UTILITY")
+	toggle("Instant Heal", CFG.InstantHeal, function(v) CFG.InstantHeal = v end)
+	toggle("Instant Gen", CFG.InstantGen, function(v) CFG.InstantGen = v end)
+	toggle("God Pallet", CFG.GodPallet, function(v) CFG.GodPallet = v end)
+	toggle("No Fall Damage", CFG.NoFallDamage, function(v) CFG.NoFallDamage = v end)
+	toggle("Fast Vault", CFG.FastVault, function(v) CFG.FastVault = v end)
+	toggle("TP to Exit", CFG.TPExit, function(v) CFG.TPExit = v end)
+	toggle("Auto Skill Check", CFG.AutoSkill, function(v) CFG.AutoSkill = v end)
+	dropdown("Skill Mode", {"Legit", "Ghost", "Auto"}, CFG.SkillMode, function(v) CFG.SkillMode = v end)
+	toggle("Auto Drop Pallet", CFG.AutoPalletDrop, function(v) CFG.AutoPalletDrop = v end)
+	toggle("Auto Flee Killer", CFG.AutoFlee, function(v) CFG.AutoFlee = v end)
+end)
+
+-- ═══════════════════════════════════════════════════════════════
+-- TAB: ESP
+-- ═══════════════════════════════════════════════════════════════
+makeTab("ESP", function()
 	section("ESP CHAMS")
 	toggle("Enable ESP", CFG.ESP, function(v) CFG.ESP = v end)
 	toggle("Chams (Tembus Tembok)", CFG.Chams, function(v) CFG.Chams = v end)
@@ -441,47 +527,26 @@ function buildESP()
 	toggle("Show Name", CFG.ESPName, function(v) CFG.ESPName = v end)
 	toggle("Show Distance", CFG.ESPDist, function(v) CFG.ESPDist = v end)
 	toggle("Show Health", CFG.ESPHealth, function(v) CFG.ESPHealth = v end)
+	toggle("Team Check", CFG.TeamCheck, function(v) CFG.TeamCheck = v end)
+	section("OBJECT ESP")
 	toggle("ESP Generator", CFG.ESPGen, function(v) CFG.ESPGen = v end)
 	toggle("ESP Pallet", CFG.ESPPallet, function(v) CFG.ESPPallet = v end)
-	toggle("Team Check", CFG.TeamCheck, function(v) CFG.TeamCheck = v end)
-	section("SETTINGS")
+	toggle("ESP Hook", CFG.ESPHook, function(v) CFG.ESPHook = v end)
 	slider("Max Distance", 50, 2000, CFG.ESPMaxDist, function(v) CFG.ESPMaxDist = v end)
-end
+end)
 
-function buildVeil()
-	section("THE VEIL")
-	dropdown("Mode", {"Auto", "PiercedVow", "ThroughVeil"}, CFG.VeilMode, function(v) CFG.VeilMode = v end)
-	toggle("Auto Switch Mode", CFG.AutoSwitch, function(v) CFG.AutoSwitch = v end)
-	slider("Charge Time (x10)", 5, 30, CFG.ChargeTime * 10, function(v) CFG.ChargeTime = v / 10 end)
-	section("KILLER UTILITY")
-	toggle("Auto Chase", CFG.AutoChase, function(v) CFG.AutoChase = v end)
-	toggle("Auto Pallet Break", CFG.AutoPallet, function(v) CFG.AutoPallet = v end)
-	toggle("Auto Vault", CFG.AutoVault, function(v) CFG.AutoVault = v end)
-end
-
-function buildSurvivor()
-	section("AUTO DAGGER (PARRY)")
-	toggle("Enable Auto Dagger", CFG.AutoDagger, function(v) CFG.AutoDagger = v end)
-	toggle("Only When Facing", CFG.OnlyFacing, function(v) CFG.OnlyFacing = v end)
-	slider("Parry Distance", 3, 20, CFG.ParryDist, function(v) CFG.ParryDist = v end)
-	slider("Parry Delay (ms)", 0, 500, CFG.ParryDelay * 1000, function(v) CFG.ParryDelay = v / 1000 end)
-	section("SURVIVOR")
-	toggle("Auto Skill Check", CFG.AutoSkill, function(v) CFG.AutoSkill = v end)
-	dropdown("Skill Mode", {"Legit", "Ghost", "Auto"}, CFG.SkillMode, function(v) CFG.SkillMode = v end)
-	toggle("Auto Drop Pallet", CFG.AutoPalletDrop, function(v) CFG.AutoPalletDrop = v end)
-	toggle("Auto Flee Killer", CFG.AutoFlee, function(v) CFG.AutoFlee = v end)
-	toggle("Anti Fall Damage", CFG.AntiFall, function(v) CFG.AntiFall = v end)
-end
-
-function buildMove()
+-- ═══════════════════════════════════════════════════════════════
+-- TAB: MOVE
+-- ═══════════════════════════════════════════════════════════════
+makeTab("Move", function()
 	section("MOVEMENT")
 	toggle("Speed Hack", CFG.SpeedHack, function(v)
 		CFG.SpeedHack = v
 		local h = LP.Character and LP.Character:FindFirstChild("Humanoid")
-		if h then h.WalkSpeed = v and CFG.SpeedValue or 16 end
+		if h then h.WalkSpeed = v and CFG.SpeedVal or 16 end
 	end)
-	slider("Speed Value", 20, 200, CFG.SpeedValue, function(v)
-		CFG.SpeedValue = v
+	slider("Speed Value", 16, 300, CFG.SpeedVal, function(v)
+		CFG.SpeedVal = v
 		if CFG.SpeedHack then
 			local h = LP.Character and LP.Character:FindFirstChild("Humanoid")
 			if h then h.WalkSpeed = v end
@@ -492,10 +557,10 @@ function buildMove()
 		local h = LP.Character and LP.Character:FindFirstChild("Humanoid")
 		if h then
 			h.UseJumpPower = v
-			h.JumpPower = v and CFG.JumpValue or 50
+			h.JumpPower = v and CFG.JumpVal or 50
 		end
 	end)
-	slider("Jump Value", 50, 300, CFG.JumpValue, function(v) CFG.JumpValue = v end)
+	slider("Jump Value", 50, 300, CFG.JumpVal, function(v) CFG.JumpVal = v end)
 	toggle("Infinite Jump", CFG.InfJump, function(v) CFG.InfJump = v end)
 	toggle("Fly", CFG.Fly, function(v) CFG.Fly = v end)
 	slider("Fly Speed", 20, 300, CFG.FlySpeed, function(v) CFG.FlySpeed = v end)
@@ -505,57 +570,54 @@ function buildMove()
 		local h = LP.Character and LP.Character:FindFirstChild("Humanoid")
 		if h then h.MaxHealth = v and math.huge or 100; h.Health = v and math.huge or 100 end
 	end)
-end
+	toggle("Anti Stun", CFG.AntiStun, function(v) CFG.AntiStun = v end)
+	toggle("Anti Knock", CFG.AntiKnock, function(v) CFG.AntiKnock = v end)
+end)
 
-function buildVisual()
+-- ═══════════════════════════════════════════════════════════════
+-- TAB: MISC
+-- ═══════════════════════════════════════════════════════════════
+makeTab("Misc", function()
 	section("VISUAL")
 	toggle("Fullbright", CFG.Fullbright, function(v) CFG.Fullbright = v; applyVisual() end)
 	toggle("No Shadow", CFG.NoShadow, function(v) CFG.NoShadow = v; applyVisual() end)
-	toggle("Low Graphics", CFG.LowGraphics, function(v) CFG.LowGraphics = v; applyVisual() end)
-	toggle("No Screen Effects", CFG.NoEffects, function(v) CFG.NoEffects = v; applyVisual() end)
 	toggle("Clean Sky", CFG.CleanSky, function(v) CFG.CleanSky = v; applyVisual() end)
-	section("CLOCK & AMBIENT")
+	toggle("No Screen Effects", CFG.NoEffects, function(v) CFG.NoEffects = v; applyVisual() end)
 	slider("Clock Time", 0, 24, CFG.ClockTime, function(v) CFG.ClockTime = v; applyVisual() end)
 	slider("Brightness", 0, 5, CFG.Brightness, function(v) CFG.Brightness = v; applyVisual() end)
-	slider("Max Zoom", 100, 5000, CFG.Zoom, function(v)
-		CFG.Zoom = v
+	slider("Max Zoom", 100, 5000, CFG.MaxZoom, function(v)
+		CFG.MaxZoom = v
 		LP.CameraMaxZoomDistance = v
 	end)
-end
-
-function buildMisc()
-	section("EXTRA")
-	toggle("Kill Aura", CFG.KillAura, function(v) CFG.KillAura = v end)
-	toggle("Auto Farm", CFG.AutoFarm, function(v) CFG.AutoFarm = v end)
-	toggle("Anti AFK", CFG.AntiAFK, function(v) CFG.AntiAFK = v end)
-	toggle("FPS Boost", CFG.FPSBoost, function(v)
-		CFG.FPSBoost = v
-		if v then
-			settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-			Lighting.GlobalShadows = false
+	section("ANTI-DETECT")
+	toggle("Anti Report", CFG.AntiReport, function(v) CFG.AntiReport = v end)
+	toggle("Anti Kick", CFG.AntiKick, function(v) CFG.AntiKick = v end)
+	toggle("Spoof Name", CFG.SpoofName, function(v)
+		CFG.SpoofName = v
+		if LP.Character then
+			local h = LP.Character:FindFirstChildOfClass("Humanoid")
+			if h then h.DisplayName = v and "ANDIKA" or LP.DisplayName end
 		end
 	end)
-end
+	toggle("Random Delay", CFG.RandomDelay, function(v) CFG.RandomDelay = v end)
+	toggle("Auto Disable on Death", CFG.AutoDisable, function(v) CFG.AutoDisable = v end)
+end)
 
 -- ═══════════════════════════════════════════════════════════════
--- TAB CREATE
+-- FOV CIRCLE
 -- ═══════════════════════════════════════════════════════════════
-makeTab("Combat")
-makeTab("ESP")
-makeTab("Veil")
-makeTab("Survivor")
-makeTab("Move")
-makeTab("Visual")
-makeTab("Misc")
-
--- Default tab
-for _, t in ipairs(TabBar:GetChildren()) do
-	if t:IsA("TextButton") and t.Text == "Combat" then
-		t.BackgroundColor3 = Color3.fromRGB(0, 120, 180)
-		t.TextColor3 = Color3.fromRGB(0, 255, 255)
-	end
-end
-buildCombat()
+local FOVCircle = Instance.new("Frame")
+FOVCircle.Size = UDim2.new(0, 200, 0, 200)
+FOVCircle.Position = UDim2.new(0.5, -100, 0.5, -100)
+FOVCircle.BackgroundTransparency = 1
+FOVCircle.BorderSizePixel = 0
+FOVCircle.Visible = false
+FOVCircle.Parent = GUI
+local FOVStroke = Instance.new("UIStroke", FOVCircle)
+FOVStroke.Color = Color3.fromRGB(0, 255, 255)
+FOVStroke.Thickness = 1.5
+FOVStroke.Transparency = 0.4
+Instance.new("UICorner", FOVCircle).CornerRadius = UDim.new(1, 0)
 
 -- ═══════════════════════════════════════════════════════════════
 -- LOGIC: VISUAL
@@ -581,11 +643,10 @@ end
 -- ═══════════════════════════════════════════════════════════════
 local function getTarget()
 	local char = LP.Character
-	if not char then return nil end
+	if not char then return nil, nil end
 	local hrp = char:FindFirstChild("HumanoidRootPart")
-	if not hrp then return nil end
-	
-	local closest, shortest = nil, CFG.MaxDist
+	if not hrp then return nil, nil end
+	local closest, shortest, closestPart = nil, CFG.MaxDistance, nil
 	for _, p in ipairs(Players:GetPlayers()) do
 		if p ~= LP and p.Character then
 			local thrp = p.Character:FindFirstChild("HumanoidRootPart")
@@ -594,12 +655,17 @@ local function getTarget()
 				local dist = (thrp.Position - hrp.Position).Magnitude
 				if dist < shortest then
 					shortest = dist
-					closest = thrp
+					closest = p
+					local partName = CFG.TargetPart
+					if partName == "Random" then
+						partName = (math.random() > 0.5) and "Head" or "HumanoidRootPart"
+					end
+					closestPart = p.Character:FindFirstChild(partName) or thrp
 				end
 			end
 		end
 	end
-	return closest
+	return closest, closestPart
 end
 
 -- ═══════════════════════════════════════════════════════════════
@@ -607,6 +673,14 @@ end
 -- ═══════════════════════════════════════════════════════════════
 local lastFire = 0
 RunService.Heartbeat:Connect(function()
+	if CFG.FOVCircle and CFG.SilentAim then
+		FOVCircle.Visible = true
+		FOVCircle.Size = UDim2.new(0, CFG.FOV, 0, CFG.FOV)
+		FOVCircle.Position = UDim2.new(0.5, -CFG.FOV/2, 0.5, -CFG.FOV/2)
+	else
+		FOVCircle.Visible = false
+	end
+	
 	if not CFG.SilentAim then return end
 	local char = LP.Character
 	if not char then return end
@@ -614,33 +688,29 @@ RunService.Heartbeat:Connect(function()
 	local hum = char:FindFirstChild("Humanoid")
 	if not hrp or not hum or hum.Health <= 0 then return end
 	
-	local target = getTarget()
-	if not target then return end
+	local target, targetPart = getTarget()
+	if not target or not targetPart then return end
 	
-	local aimPos = target.Position
-	if CFG.AimPredict then
-		local dist = (target.Position - hrp.Position).Magnitude
-		aimPos = aimPos + target.Velocity * (dist / CFG.PredictSpeed)
-	end
+	InfoPanel.Text = string.format("  Target: %s  |  Dist: %d  |  Speed: %d",
+		target.Name, math.floor((targetPart.Position - hrp.Position).Magnitude), math.floor(hum.WalkSpeed))
 	
 	if CFG.AutoFace then
-		local look = CFrame.new(hrp.Position, aimPos)
+		local look = CFrame.new(hrp.Position, targetPart.Position)
 		hrp.CFrame = CFrame.new(hrp.Position) * (look - look.Position)
 	end
 	
 	local now = tick()
-	if now - lastFire >= CFG.FireDelay then
+	local delay = CFG.FireDelay
+	if CFG.RandomDelay then delay = delay + math.random() * 0.05 end
+	if now - lastFire >= delay then
 		lastFire = now
 		local tool = char:FindFirstChildOfClass("Tool")
-		if tool and CFG.AutoActivate then tool:Activate() end
-		
-		if CFG.RemoteSpam then
-			for _, v in ipairs(game:GetDescendants()) do
-				if v:IsA("RemoteEvent") then
-					local n = v.Name:lower()
-					if n:find("hit") or n:find("damage") or n:find("attack") or n:find("spear") or n:find("melee") then
-						pcall(function() v:FireServer(target, aimPos, tool) end)
-					end
+		if tool and (CFG.AutoActivate or CFG.AutoShoot) then tool:Activate() end
+		for _, v in ipairs(game:GetDescendants()) do
+			if v:IsA("RemoteEvent") then
+				local n = v.Name:lower()
+				if n:find("hit") or n:find("damage") or n:find("attack") or n:find("shoot") or n:find("fire") then
+					pcall(function() v:FireServer(targetPart, targetPart.Position, tool) end)
 				end
 			end
 		end
@@ -648,8 +718,97 @@ RunService.Heartbeat:Connect(function()
 end)
 
 -- ═══════════════════════════════════════════════════════════════
--- LOGIC: AUTO DAGGER (PARRY)
+-- LOGIC: TELEPORT KILL
 -- ═══════════════════════════════════════════════════════════════
+local lastTP = 0
+RunService.Heartbeat:Connect(function()
+	if not CFG.TPKill then return end
+	local char = LP.Character
+	if not char then return end
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local hum = char:FindFirstChild("Humanoid")
+	if not hrp or not hum or hum.Health <= 0 then return end
+	local now = tick()
+	if now - lastTP < CFG.TPDelay then return end
+	local target, targetPart = getTarget()
+	if not target or not targetPart then return end
+	lastTP = now
+	hrp.CFrame = CFrame.new(targetPart.Position + Vector3.new(0, 3, 0))
+	task.wait(0.05)
+	local tool = char:FindFirstChildOfClass("Tool")
+	if tool then tool:Activate() end
+	for _, v in ipairs(game:GetDescendants()) do
+		if v:IsA("RemoteEvent") then
+			local n = v.Name:lower()
+			if n:find("hit") or n:find("damage") or n:find("attack") then
+				pcall(function() v:FireServer(targetPart) end)
+			end
+		end
+	end
+end)
+
+-- ═══════════════════════════════════════════════════════════════
+-- LOGIC: BYPASS UNHOOK + SINK
+-- ═══════════════════════════════════════════════════════════════
+local originalPos = nil
+local unhooked = false
+RunService.Heartbeat:Connect(function()
+	if not CFG.AutoUnhook then return end
+	local char = LP.Character
+	if not char then return end
+	local hrp = char:FindFirstChild("HumanoidRootPart")
+	local hum = char:FindFirstChild("Humanoid")
+	if not hrp or not hum then return end
+	-- Cek apakah lagi di-hook (cari attachment / tool "hook" di karakter)
+	local isHooked = false
+	for _, obj in ipairs(char:GetDescendants()) do
+		if obj.Name:lower():find("hook") or obj.Name:lower():find("tancep") then
+			isHooked = true
+			break
+		end
+	end
+	if isHooked then
+		-- Trigger unhook
+		for _, v in ipairs(game:GetDescendants()) do
+			if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
+				local n = v.Name:lower()
+				if n:find("unhook") or n:find("escape") or n:find("struggle") or n:find("release") then
+					pcall(function() v:FireServer() end)
+				end
+			end
+		end
+		if not unhooked then
+			unhooked = true
+			originalPos = hrp.Position
+			if CFG.SinkUnder then
+				hrp.CFrame = CFrame.new(hrp.Position - Vector3.new(0, CFG.SinkDepth, 0))
+			end
+			if CFG.InvisibleAfterUnhook then
+				for _, obj in ipairs(char:GetDescendants()) do
+					if obj:IsA("BasePart") then
+						obj.Transparency = 1
+					end
+					if obj:IsA("Decal") then
+						obj.Transparency = 1
+					end
+				end
+				task.wait(3)
+				for _, obj in ipairs(char:GetDescendants()) do
+					if obj:IsA("BasePart") and obj.Name ~= "HumanoidRootPart" then
+						obj.Transparency = 0
+					end
+				end
+			end
+		end
+	else
+		unhooked = false
+	end
+end)
+
+-- ═══════════════════════════════════════════════════════════════
+-- LOGIC: AUTO DAGGER
+-- ═══════════════════════════════════════════════════════════════
+local lastParry = 0
 RunService.Heartbeat:Connect(function()
 	if not CFG.AutoDagger then return end
 	local char = LP.Character
@@ -657,7 +816,8 @@ RunService.Heartbeat:Connect(function()
 	local hum = char:FindFirstChild("Humanoid")
 	local hrp = char:FindFirstChild("HumanoidRootPart")
 	if not hum or not hrp then return end
-	
+	local now = tick()
+	if now - lastParry < 0.2 then return end
 	local killer, shortest = nil, CFG.ParryDist
 	for _, p in ipairs(Players:GetPlayers()) do
 		if p ~= LP and p.Character then
@@ -668,7 +828,6 @@ RunService.Heartbeat:Connect(function()
 			end
 		end
 	end
-	
 	if killer then
 		local kChar = killer.Character
 		local kHum = kChar and kChar:FindFirstChild("Humanoid")
@@ -677,9 +836,9 @@ RunService.Heartbeat:Connect(function()
 			for _, track in ipairs(kAnim:GetPlayingAnimationTracks()) do
 				local n = track.Name:lower()
 				if n:find("attack") or n:find("slash") or n:find("stab") or n:find("swing") then
+					lastParry = now
 					local dagger = char:FindFirstChildOfClass("Tool")
 					if dagger and dagger.Name:lower():find("dagger") then
-						task.wait(CFG.ParryDelay)
 						dagger:Activate()
 					else
 						local bp = LP:FindFirstChild("Backpack")
@@ -687,7 +846,7 @@ RunService.Heartbeat:Connect(function()
 							for _, t in ipairs(bp:GetChildren()) do
 								if t:IsA("Tool") and t.Name:lower():find("dagger") then
 									hum:EquipTool(t)
-									task.wait(CFG.ParryDelay)
+									task.wait(0.05)
 									t:Activate()
 									break
 								end
@@ -701,7 +860,7 @@ RunService.Heartbeat:Connect(function()
 end)
 
 -- ═══════════════════════════════════════════════════════════════
--- LOGIC: ESP CHAMS
+-- LOGIC: ESP
 -- ═══════════════════════════════════════════════════════════════
 local espFolder = Instance.new("Folder", GUI)
 espFolder.Name = "VD_ESP"
@@ -716,6 +875,7 @@ local function createESP(p)
 	box.Parent = espFolder
 	local stroke = Instance.new("UIStroke", box)
 	stroke.Thickness = 1.5
+	stroke.Color = Color3.fromRGB(255, 0, 0)
 	
 	local name = Instance.new("TextLabel", box)
 	name.Size = UDim2.new(1, 0, 0, 14)
@@ -743,12 +903,13 @@ local function createESP(p)
 	hp.BorderSizePixel = 0
 	hp.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 	
-	local hl = Instance.new("Highlight", box)
-	hl.Name = "Cham"
+	local hl = Instance.new("Highlight")
 	hl.FillTransparency = 0.5
 	hl.OutlineTransparency = 0
+	hl.FillColor = Color3.fromRGB(255, 0, 0)
+	hl.OutlineColor = Color3.fromRGB(255, 100, 100)
 	hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-	hl.Adornee = nil
+	hl.Parent = espFolder
 	
 	espObjects[p] = {Box = box, Stroke = stroke, Name = name, Dist = dist, HP = hp, HL = hl}
 end
@@ -756,19 +917,43 @@ end
 local function removeESP(p)
 	if espObjects[p] then
 		espObjects[p].Box:Destroy()
+		espObjects[p].HL:Destroy()
 		espObjects[p] = nil
 	end
 end
 
--- ═══════════════════════════════════════════════════════════════
--- ESP UPDATE
--- ═══════════════════════════════════════════════════════════════
+-- ESP Gen scan
+local genObjects = {}
+local function scanGen()
+	if not CFG.ESPGen then
+		for _, g in pairs(genObjects) do g.HL:Destroy(); g.Box:Destroy() end
+		genObjects = {}
+		return
+	end
+	for _, obj in ipairs(Workspace:GetDescendants()) do
+		if obj:IsA("Model") or obj:IsA("BasePart") then
+			local n = obj.Name:lower()
+			if n:find("generator") or n:find("gen") or n:find("fuse") or n:find("repair") then
+				if not genObjects[obj] then
+					local hl = Instance.new("Highlight")
+					hl.FillColor = Color3.fromRGB(0, 150, 255)
+					hl.OutlineColor = Color3.fromRGB(0, 255, 255)
+					hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+					hl.FillTransparency = 0.5
+					hl.Parent = espFolder
+					hl.Adornee = obj
+					genObjects[obj] = {HL = hl}
+				end
+			end
+		end
+	end
+end
+
 RunService.RenderStepped:Connect(function()
 	if not CFG.ESP then
 		for _, o in pairs(espObjects) do o.Box.Visible = false; o.HL.Enabled = false end
 		return
 	end
-	
 	for p, o in pairs(espObjects) do
 		local char = p.Character
 		if char then
@@ -783,7 +968,6 @@ RunService.RenderStepped:Connect(function()
 						o.Box.Visible = CFG.ESPBox
 						o.Box.Size = UDim2.new(0, size, 0, size * 1.5)
 						o.Box.Position = UDim2.new(0, pos.X - size/2, 0, pos.Y - (size*1.5)/2)
-						o.Stroke.Color = Color3.fromRGB(255, 0, 0)
 						o.Name.Visible = CFG.ESPName
 						o.Name.Text = p.Name
 						o.Dist.Visible = CFG.ESPDist
@@ -796,8 +980,6 @@ RunService.RenderStepped:Connect(function()
 						if CFG.Chams then
 							o.HL.Enabled = true
 							o.HL.Adornee = char
-							o.HL.FillColor = Color3.fromRGB(255, 0, 0)
-							o.HL.OutlineColor = Color3.fromRGB(255, 100, 100)
 						else
 							o.HL.Enabled = false
 						end
@@ -818,20 +1000,39 @@ RunService.RenderStepped:Connect(function()
 			o.HL.Enabled = false
 		end
 	end
+	scanGen()
 end)
 
 -- ═══════════════════════════════════════════════════════════════
--- MOVEMENT
+-- MOVEMENT (FIX)
 -- ═══════════════════════════════════════════════════════════════
 local function onChar(char)
 	local hum = char:WaitForChild("Humanoid")
 	if CFG.GodMode then hum.MaxHealth = math.huge; hum.Health = math.huge end
-	if CFG.SpeedHack then hum.WalkSpeed = CFG.SpeedValue end
-	if CFG.JumpPower then hum.UseJumpPower = true; hum.JumpPower = CFG.JumpValue end
 end
 LP.CharacterAdded:Connect(onChar)
 if LP.Character then onChar(LP.Character) end
 
+-- Speed re-apply tiap heartbeat
+RunService.Heartbeat:Connect(function()
+	local char = LP.Character
+	if not char then return end
+	local hum = char:FindFirstChild("Humanoid")
+	if not hum then return end
+	if CFG.SpeedHack then
+		hum.WalkSpeed = CFG.SpeedVal
+	end
+	if CFG.JumpPower then
+		hum.UseJumpPower = true
+		hum.JumpPower = CFG.JumpVal
+	end
+	if CFG.GodMode then
+		hum.MaxHealth = math.huge
+		hum.Health = math.huge
+	end
+end)
+
+-- Infinite Jump
 UserInputService.JumpRequest:Connect(function()
 	if CFG.InfJump then
 		local h = LP.Character and LP.Character:FindFirstChild("Humanoid")
@@ -839,14 +1040,14 @@ UserInputService.JumpRequest:Connect(function()
 	end
 end)
 
--- Fly
-local flyBV, flyBG
+-- Fly (FIX pakai BodyVelocity + re-apply)
+local flyBV
 RunService.Heartbeat:Connect(function()
 	if CFG.Fly then
 		local char = LP.Character
 		local hrp = char and char:FindFirstChild("HumanoidRootPart")
 		if hrp then
-			if not flyBV then
+			if not flyBV or not flyBV.Parent then
 				flyBV = Instance.new("BodyVelocity", hrp)
 				flyBV.MaxForce = Vector3.new(1e9, 1e9, 1e9)
 				flyBV.Velocity = Vector3.new(0, 0, 0)
@@ -864,7 +1065,7 @@ RunService.Heartbeat:Connect(function()
 	end
 end)
 
--- Noclip
+-- Noclip re-apply
 RunService.Stepped:Connect(function()
 	if CFG.Noclip then
 		local char = LP.Character
@@ -876,15 +1077,11 @@ RunService.Stepped:Connect(function()
 	end
 end)
 
--- ═══════════════════════════════════════════════════════════════
--- MISC
--- ═══════════════════════════════════════════════════════════════
+-- Anti AFK
 LP.Idled:Connect(function()
-	if CFG.AntiAFK then
-		VirtualUser:Button2Down(Vector2.new(0,0), Camera.CFrame)
-		task.wait(1)
-		VirtualUser:Button2Up(Vector2.new(0,0), Camera.CFrame)
-	end
+	VirtualUser:Button2Down(Vector2.new(0,0), Camera.CFrame)
+	task.wait(1)
+	VirtualUser:Button2Up(Vector2.new(0,0), Camera.CFrame)
 end)
 
 -- Player tracking
@@ -895,18 +1092,27 @@ Players.PlayerRemoving:Connect(removeESP)
 -- ═══════════════════════════════════════════════════════════════
 -- UI EVENTS
 -- ═══════════════════════════════════════════════════════════════
-ToggleBtn.MouseButton1Click:Connect(function()
+Toggle.MouseButton1Click:Connect(function()
 	Main.Visible = not Main.Visible
 end)
 CloseBtn.MouseButton1Click:Connect(function() Main.Visible = false end)
 
--- Notification
+-- Default tab
+for _, t in ipairs(TabBar:GetChildren()) do
+	if t:IsA("TextButton") and t.Text == "Aim" then
+		t.BackgroundColor3 = Color3.fromRGB(0, 120, 180)
+		t.TextColor3 = Color3.fromRGB(0, 255, 255)
+	end
+end
+clearContent()
+tabFuncs["Aim"]()
+
 pcall(function()
 	StarterGui:SetCore("SendNotification", {
-		Title = "ZENKAI SC",
+		Title = "ZENKAI SC v4.0",
 		Text = "Loaded · by ANDIKA",
 		Duration = 5,
 	})
 end)
 
-print("[ZENKAI SC] Loaded · by ANDIKA")
+print("[ZENKAI SC v4.0] Loaded · by ANDIKA")
